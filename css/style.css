@@ -478,6 +478,29 @@ a.info {
     color: var(--titleColor);
 }
 
+.adminSortLink {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    color: white;
+}
+
+.adminSortLink:hover {
+    color: var(--headerPaleColor);
+}
+
+.adminSortLink span {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+#articlesTable,
+#commentsTable {
+    scroll-margin-top: 30px;
+}
+
 .commentsMonitoringTable td:nth-child(4) {
     max-width: 360px;
     line-height: 1.4;

@@ -33,7 +33,7 @@
       <span class="monitoringCardLabel">Dernier article publié</span>
     </article>
   </section>
-  <section class="adminSection">
+  <section class="adminSection" id="mostViewedArticlesTable">
     <h2>Articles les plus consultés</h2>
     <table class="adminTable">
       <thead>
@@ -52,7 +52,9 @@
           <?php foreach ($mostViewedArticles as $article) { ?>
             <tr>
               <td><?= htmlspecialchars($article->getTitle(), ENT_QUOTES); ?></td>
-              <td class="adminTableSmallColumn"><?= $article->getViews(); ?></td>
+              <td class="adminTableSmallColumn">
+                <?= $article->getViews(); ?>
+              </td>
               <td class="adminTableActionColumn">
                 <a class="adminButton" href="index.php?action=showArticle&id=<?= $article->getId(); ?>">
                   Voir
@@ -64,16 +66,37 @@
       </tbody>
     </table>
   </section>
-  <section class="adminSection">
+
+  <section class="adminSection" id="articlesTable">
     <h2>Suivi des articles</h2>
     <table class="adminTable">
       <thead>
         <tr>
-          <th>Article</th>
-          <th class="adminTableDateColumn">Publication</th>
-          <th class="adminTableDateColumn">Modification</th>
-          <th class="adminTableSmallColumn">Commentaires</th>
-          <th class="adminTableSmallColumn">Vues</th>
+          <th>
+            <a class="adminSortLink" href="<?= Utils::getArticleSortUrl('title', $articleSort, $articleOrder, $commentSort, $commentOrder); ?>">
+              Article <span><?= Utils::getSortArrow($articleSort, $articleOrder, 'title'); ?></span>
+            </a>
+          </th>
+          <th class="adminTableDateColumn">
+            <a class="adminSortLink" href="<?= Utils::getArticleSortUrl('date_creation', $articleSort, $articleOrder, $commentSort, $commentOrder); ?>">
+              Publication <span><?= Utils::getSortArrow($articleSort, $articleOrder, 'date_creation'); ?></span>
+            </a>
+          </th>
+          <th class="adminTableDateColumn">
+            <a class="adminSortLink" href="<?= Utils::getArticleSortUrl('date_update', $articleSort, $articleOrder, $commentSort, $commentOrder); ?>">
+              Modification <span><?= Utils::getSortArrow($articleSort, $articleOrder, 'date_update'); ?></span>
+            </a>
+          </th>
+          <th class="adminTableSmallColumn">
+            <a class="adminSortLink" href="<?= Utils::getArticleSortUrl('total_comments', $articleSort, $articleOrder, $commentSort, $commentOrder); ?>">
+              Commentaires <span><?= Utils::getSortArrow($articleSort, $articleOrder, 'total_comments'); ?></span>
+            </a>
+          </th>
+          <th class="adminTableSmallColumn">
+            <a class="adminSortLink" href="<?= Utils::getArticleSortUrl('views', $articleSort, $articleOrder, $commentSort, $commentOrder); ?>">
+              Vues <span><?= Utils::getSortArrow($articleSort, $articleOrder, 'views'); ?></span>
+            </a>
+          </th>
           <th class="adminTableActionColumn">Accès</th>
         </tr>
       </thead>
@@ -96,8 +119,12 @@
                   Non modifié
                 <?php } ?>
               </td>
-              <td class="adminTableSmallColumn"><?= (int) $article['total_comments']; ?></td>
-              <td class="adminTableSmallColumn"><?= (int) $article['views']; ?></td>
+              <td class="adminTableSmallColumn">
+                <?= (int) $article['total_comments']; ?>
+              </td>
+              <td class="adminTableSmallColumn">
+                <?= (int) $article['views']; ?>
+              </td>
               <td class="adminTableActionColumn">
                 <a class="adminButton" href="index.php?action=showArticle&id=<?= (int) $article['id']; ?>">
                   Voir
@@ -109,14 +136,27 @@
       </tbody>
     </table>
   </section>
-  <section class="adminSection">
+
+  <section class="adminSection" id="commentsTable">
     <h2>Gestion des commentaires</h2>
     <table class="adminTable commentsMonitoringTable">
       <thead>
         <tr>
-          <th class="adminTableDateColumn">Date</th>
-          <th>Article</th>
-          <th class="adminTablePseudoColumn">Pseudo</th>
+          <th class="adminTableDateColumn">
+            <a class="adminSortLink" href="<?= Utils::getCommentSortUrl('date_creation', $articleSort, $articleOrder, $commentSort, $commentOrder); ?>">
+              Date <span><?= Utils::getSortArrow($commentSort, $commentOrder, 'date_creation'); ?></span>
+            </a>
+          </th>
+          <th>
+            <a class="adminSortLink" href="<?= Utils::getCommentSortUrl('article_title', $articleSort, $articleOrder, $commentSort, $commentOrder); ?>">
+              Article <span><?= Utils::getSortArrow($commentSort, $commentOrder, 'article_title'); ?></span>
+            </a>
+          </th>
+          <th class="adminTablePseudoColumn">
+            <a class="adminSortLink" href="<?= Utils::getCommentSortUrl('pseudo', $articleSort, $articleOrder, $commentSort, $commentOrder); ?>">
+              Pseudo <span><?= Utils::getSortArrow($commentSort, $commentOrder, 'pseudo'); ?></span>
+            </a>
+          </th>
           <th>Commentaire</th>
           <th class="adminTableActionColumn">Action</th>
         </tr>

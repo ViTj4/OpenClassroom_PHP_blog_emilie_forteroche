@@ -1,11 +1,11 @@
 <?php
 
-    /**
+/**
  * Cette classe sert à gérer les commentaires. 
  */
 class CommentManager extends AbstractEntityManager
 {
-        /**
+    /**
      * Récupère tous les commentaires d'un article.
      * @param int $idArticle: l'id de l'article.
      * @return array        : un tableau d'objets Comment.
@@ -23,12 +23,24 @@ class CommentManager extends AbstractEntityManager
         return $comments;
     }
 
-        /**
+    /**
      * Récupère tous les commentaires avec le titre de l'article associé.
+     * Le tri est volontairement sécurisé avec une liste blanche.
+     * @param string $sort : colonne demandée pour le tri.
+     * @param string $order: asc ou desc.
      * @return array
      */
-    public function getAllCommentsWithArticleTitle(): array
+    public function getAllCommentsWithArticleTitle(string $sort = "date_creation", string $order = "desc"): array
     {
+        $allowedSorts = [
+            'date_creation' => 'comment.date_creation',
+            'article_title' => 'article.title',
+            'pseudo'        => 'comment.pseudo'
+        ];
+
+        $sortColumn     = $allowedSorts[$sort] ?? $allowedSorts['date_creation'];
+        $orderDirection = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
+
         $sql = "
             SELECT 
                 comment.id,
@@ -39,7 +51,7 @@ class CommentManager extends AbstractEntityManager
                 article.title AS article_title
             FROM comment
             INNER JOIN article ON article.id = comment.id_article
-            ORDER BY comment.date_creation DESC
+            ORDER BY $sortColumn $orderDirection
         ";
 
         $result   = $this->db->query($sql);
@@ -52,7 +64,7 @@ class CommentManager extends AbstractEntityManager
         return $comments;
     }
 
-        /**
+    /**
      * Compte le nombre total de commentaires.
      * @return int
      */
@@ -65,7 +77,7 @@ class CommentManager extends AbstractEntityManager
         return (int) $row['total'];
     }
 
-        /**
+    /**
      * Récupère le dernier commentaire avec le titre de l'article associé.
      * @return array|null
      */
@@ -95,7 +107,7 @@ class CommentManager extends AbstractEntityManager
         return null;
     }
 
-        /**
+    /**
      * Récupère un commentaire par son id.
      * @param int $id : l'id du commentaire.
      * @return Comment|null : un objet Comment ou null si le commentaire n'existe pas.
@@ -113,7 +125,7 @@ class CommentManager extends AbstractEntityManager
         return null;
     }
 
-        /**
+    /**
      * Ajoute un commentaire.
      * @param Comment $comment : l'objet Comment à ajouter.
      * @return bool : true si l'ajout a réussi, false sinon.
@@ -130,7 +142,7 @@ class CommentManager extends AbstractEntityManager
         return $result->rowCount() > 0;
     }
 
-        /**
+    /**
      * Supprime un commentaire.
      * @param Comment $comment : l'objet Comment à supprimer.
      * @return bool: true si la suppression a réussi, false sinon.

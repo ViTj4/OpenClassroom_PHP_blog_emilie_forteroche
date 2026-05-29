@@ -33,14 +33,20 @@ class AdminController
         $articleManager = new ArticleManager();
         $commentManager = new CommentManager();
 
+        $articleSort  = Utils::request("articleSort", "date_creation");
+        $articleOrder = Utils::request("articleOrder", "desc");
+
+        $commentSort  = Utils::request("commentSort", "date_creation");
+        $commentOrder = Utils::request("commentOrder", "desc");
+
         $totalArticles            = $articleManager->countAllArticles();
         $totalComments            = $commentManager->countAllComments();
         $totalViews               = $articleManager->countAllViews();
         $latestArticle            = $articleManager->getLatestArticle();
         $latestComment            = $commentManager->getLatestCommentWithArticleTitle();
-        $articlesWithCommentCount = $articleManager->getArticlesWithCommentCount();
+        $articlesWithCommentCount = $articleManager->getArticlesWithCommentCount($articleSort, $articleOrder);
         $mostViewedArticles       = $articleManager->getMostViewedArticles();
-        $comments                 = $commentManager->getAllCommentsWithArticleTitle();
+        $comments                 = $commentManager->getAllCommentsWithArticleTitle($commentSort, $commentOrder);
 
         $view = new View("Monitoring");
         $view->render("monitoring", [
@@ -51,7 +57,11 @@ class AdminController
             'latestComment'            => $latestComment,
             'articlesWithCommentCount' => $articlesWithCommentCount,
             'mostViewedArticles'       => $mostViewedArticles,
-            'comments'                 => $comments
+            'comments'                 => $comments,
+            'articleSort'              => $articleSort,
+            'articleOrder'             => $articleOrder,
+            'commentSort'              => $commentSort,
+            'commentOrder'             => $commentOrder
         ]);
     }
 
