@@ -161,6 +161,36 @@ class ArticleManager extends AbstractEntityManager
         return $articles;
     }
 
+
+
+
+      /**
+     * Récupère les articles pour le filtre de gestion des commentaires.
+     * @return array
+     */
+    public function getArticlesForCommentFilter(): array
+    {
+        $sql = "
+        SELECT 
+            article.id,
+            article.title,
+            COUNT(comment.id) AS total_comments
+        FROM article
+        LEFT JOIN comment ON comment.id_article = article.id
+        GROUP BY article.id, article.title
+        ORDER BY article.title ASC
+    ";
+
+        $result   = $this->db->query($sql);
+        $articles = [];
+
+        while ($article = $result->fetch()) {
+            $articles[] = $article;
+        }
+
+        return $articles;
+    }
+
       /**
      * Ajoute ou modifie un article.
      * On sait si l'article est un nouvel article car son id sera -1.
@@ -206,7 +236,7 @@ class ArticleManager extends AbstractEntityManager
         ]);
     }
 
-    /**
+      /**
      * Supprime un article.
      * @param int $id: l'id de l'article à supprimer.
      * @return void

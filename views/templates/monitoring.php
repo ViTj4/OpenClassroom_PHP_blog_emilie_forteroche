@@ -139,62 +139,103 @@
 
   <section class="adminSection" id="commentsTable">
     <h2>Gestion des commentaires</h2>
-    <table class="adminTable commentsMonitoringTable">
-      <thead>
-        <tr>
-          <th class="adminTableDateColumn">
-            <a class="adminSortLink" href="<?= Utils::getCommentSortUrl('date_creation', $articleSort, $articleOrder, $commentSort, $commentOrder); ?>">
-              Date <span><?= Utils::getSortArrow($commentSort, $commentOrder, 'date_creation'); ?></span>
-            </a>
-          </th>
-          <th>
-            <a class="adminSortLink" href="<?= Utils::getCommentSortUrl('article_title', $articleSort, $articleOrder, $commentSort, $commentOrder); ?>">
-              Article <span><?= Utils::getSortArrow($commentSort, $commentOrder, 'article_title'); ?></span>
-            </a>
-          </th>
-          <th class="adminTablePseudoColumn">
-            <a class="adminSortLink" href="<?= Utils::getCommentSortUrl('pseudo', $articleSort, $articleOrder, $commentSort, $commentOrder); ?>">
-              Pseudo <span><?= Utils::getSortArrow($commentSort, $commentOrder, 'pseudo'); ?></span>
-            </a>
-          </th>
-          <th>Commentaire</th>
-          <th class="adminTableActionColumn">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php if (empty($comments)) { ?>
-          <tr>
-            <td colspan="5">Aucun commentaire publié.</td>
-          </tr>
-        <?php } else { ?>
-          <?php foreach ($comments as $comment) { ?>
-            <tr>
-              <td class="adminTableDateColumn">
-                <?= Utils::convertDateToFrenchFormat(new DateTime($comment['date_creation'])); ?>
-              </td>
-              <td>
-                <a class="adminTableLink" href="index.php?action=showArticle&id=<?= (int) $comment['id_article']; ?>">
-                  <?= htmlspecialchars($comment['article_title'], ENT_QUOTES); ?>
-                </a>
-              </td>
-              <td class="adminTablePseudoColumn">
-                <?= htmlspecialchars($comment['pseudo'], ENT_QUOTES); ?>
-              </td>
-              <td>
-                <?= htmlspecialchars($comment['content'], ENT_QUOTES); ?>
-              </td>
-              <td class="adminTableActionColumn">
-                <a
-                  class="adminButton adminButtonDanger"
-                  href="index.php?action=deleteComment&id=<?= (int) $comment['id']; ?>"
-                  <?= Utils::askConfirmation("Êtes-vous sûr de vouloir supprimer ce commentaire ?"); ?>>
-                  Supprimer
-                </a>
-              </td>
-            </tr>
-          <?php } ?>
+
+    <form class="adminFilterForm" action="index.php#commentsTable" method="get">
+      <input type="hidden" name="action" value="monitoring">
+      <input type="hidden" name="articleSort" value="<?= htmlspecialchars($articleSort, ENT_QUOTES); ?>">
+      <input type="hidden" name="articleOrder" value="<?= htmlspecialchars($articleOrder, ENT_QUOTES); ?>">
+      <input type="hidden" name="commentSort" value="<?= htmlspecialchars($commentSort, ENT_QUOTES); ?>">
+      <input type="hidden" name="commentOrder" value="<?= htmlspecialchars($commentOrder, ENT_QUOTES); ?>">
+
+      <label for="articleId">Filtrer les commentaires par article</label>
+
+      <select name="articleId" id="articleId">
+        <option value="0">Sélectionner un article</option>
+
+        <?php foreach ($articlesForCommentFilter as $article) { ?>
+          <option
+            value="<?= (int) $article['id']; ?>"
+            <?= $selectedArticleId === (int) $article['id'] ? 'selected' : ''; ?>>
+            <?= htmlspecialchars($article['title'], ENT_QUOTES); ?>
+            - <?= (int) $article['total_comments']; ?> commentaire<?= (int) $article['total_comments'] > 1 ? 's' : ''; ?>
+          </option>
         <?php } ?>
-      </tbody>
-    </table>
+      </select>
+
+      <button class="adminButton" type="submit">Afficher</button>
+    </form>
+
+    <?php if ($selectedArticleId === 0) { ?>
+      <p class="adminInfoMessage">
+        Sélectionnez un article pour afficher ses commentaires.
+      </p>
+    <?php } else { ?>
+      <table class="adminTable commentsMonitoringTable">
+        <thead>
+          <tr>
+            <th class="adminTableDateColumn">
+              <a class="adminSortLink" href="<?= Utils::getCommentSortUrl('date_creation', $articleSort, $articleOrder, $commentSort, $commentOrder, $selectedArticleId); ?>">
+                Date <span><?= Utils::getSortArrow($commentSort, $commentOrder, 'date_creation'); ?></span>
+              </a>
+            </th>
+
+            <th>
+              <a class="adminSortLink" href="<?= Utils::getCommentSortUrl('article_title', $articleSort, $articleOrder, $commentSort, $commentOrder, $selectedArticleId); ?>">
+                Article <span><?= Utils::getSortArrow($commentSort, $commentOrder, 'article_title'); ?></span>
+              </a>
+            </th>
+
+            <th class="adminTablePseudoColumn">
+              <a class="adminSortLink" href="<?= Utils::getCommentSortUrl('pseudo', $articleSort, $articleOrder, $commentSort, $commentOrder, $selectedArticleId); ?>">
+                Pseudo <span><?= Utils::getSortArrow($commentSort, $commentOrder, 'pseudo'); ?></span>
+              </a>
+            </th>
+
+            <th>Commentaire</th>
+
+            <th class="adminTableActionColumn">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <?php if (empty($comments)) { ?>
+            <tr>
+              <td colspan="5">Aucun commentaire publié pour cet article.</td>
+            </tr>
+          <?php } else { ?>
+            <?php foreach ($comments as $comment) { ?>
+              <tr>
+                <td class="adminTableDateColumn">
+                  <?= Utils::convertDateToFrenchFormat(new DateTime($comment['date_creation'])); ?>
+                </td>
+
+                <td>
+                  <a class="adminTableLink" href="index.php?action=showArticle&id=<?= (int) $comment['id_article']; ?>">
+                    <?= htmlspecialchars($comment['article_title'], ENT_QUOTES); ?>
+                  </a>
+                </td>
+
+                <td class="adminTablePseudoColumn">
+                  <?= htmlspecialchars($comment['pseudo'], ENT_QUOTES); ?>
+                </td>
+
+                <td>
+                  <?= htmlspecialchars($comment['content'], ENT_QUOTES); ?>
+                </td>
+
+                <td class="adminTableActionColumn">
+                  <a
+                    class="adminButton adminButtonDanger"
+                    href="index.php?action=deleteComment&id=<?= (int) $comment['id']; ?>"
+                    <?= Utils::askConfirmation("Êtes-vous sûr de vouloir supprimer ce commentaire ?"); ?>>
+                    Supprimer
+                  </a>
+                </td>
+              </tr>
+            <?php } ?>
+          <?php } ?>
+        </tbody>
+      </table>
+    <?php } ?>
   </section>
 </div>

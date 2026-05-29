@@ -160,6 +160,7 @@ class Utils
      * @param string $articleOrder
      * @param string $commentSort
      * @param string $commentOrder
+     * @param int $selectedArticleId
      * @return string
      */
     public static function getCommentSortUrl(
@@ -167,16 +168,23 @@ class Utils
         string $articleSort,
         string $articleOrder,
         string $commentSort,
-        string $commentOrder
+        string $commentOrder,
+        int $selectedArticleId = 0
     ): string {
         $nextOrder = self::getNextSortOrder($commentSort, $commentOrder, $column);
 
-        return 'index.php?' . http_build_query([
+        $params = [
             'action'       => 'monitoring',
             'articleSort'  => $articleSort,
             'articleOrder' => $articleOrder,
             'commentSort'  => $column,
             'commentOrder' => $nextOrder
-        ]) . '#commentsTable';
+        ];
+
+        if ($selectedArticleId > 0) {
+            $params['articleId'] = $selectedArticleId;
+        }
+
+        return 'index.php?' . http_build_query($params) . '#commentsTable';
     }
 }
