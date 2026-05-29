@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Qwitcher+Grypen:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Qwitcher+Grypen:wght@300;400;500;700&family=Roboto:wght@400;500&display=swap');
 
 /**
  * Reset css.
@@ -305,47 +305,242 @@ a.info {
 
 /**
  * Partie admin
- */ 
+ */
 
-.adminArticle {
-    margin-bottom: 20px;
-    background-color: var(--commentPaleColor);
-    color: white;
+.adminPage {
+    width: 100%;
+    min-width: 1000px;
+    font-family: 'Roboto', Arial, sans-serif;
+    font-weight: 400;
 }
 
-.articleLine {
-    display: flex; 
+.adminHeader {
+    width: 100%;
+    margin-bottom: 30px;
 }
 
-.articleLine div {
+.adminHeader h2 {
+    margin-bottom: 15px;
+    color: var(--headerColor);
+}
+
+.adminNavigation {
     display: flex;
-    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
 }
 
-.articleLine .title {
-    font-weight: bold;
-    min-width: 200px;
-    width: 200px;
+.adminSection {
+    width: 100%;
+    margin-bottom: 45px;
+    border-radius: 8px;
 }
 
-.articleLine .content {
-    flex-grow: 1;
+.adminSection h2 {
+    margin-bottom: 15px;
+    color: var(--headerColor);
 }
 
-.articleLine > div {
-    padding: 20px;
+/**
+ * Typographie admin
+ */
+.adminHeader h2,
+.adminSection h2,
+.adminButton,
+.adminTable th,
+.adminTableTitleColumn,
+.adminTableLink,
+.monitoringCardValue,
+.monitoringCardLabel {
+    font-family: 'Roboto', Arial, sans-serif;
+    font-weight: 500;
+}
+
+/**
+ * Boutons admin
+ */
+.adminButton {
+    display: inline-block;
+    min-width: 90px;
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 14px;
+    color: white;
+    background-color: var(--commentColor);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.adminButton:hover {
+    background-color: var(--commentPaleColor);
+}
+
+.adminButtonDanger {
+    background-color: var(--titleColor);
+}
+
+.adminButtonDanger:hover {
+    background-color: var(--headerColor);
+}
+
+/**
+ * Tableaux admin
+ */
+.adminTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    background-color: white;
+    font-size: 14px;
+    font-family: 'Roboto', Arial, sans-serif;
+    font-weight: 400;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.40);
+}
+
+.adminTable thead {
+    color: white;
+    background-color: var(--commentColor);
+}
+
+.adminTable th {
+    padding: 14px 12px;
+    text-align: left;
     border: 1px solid var(--backgroundColor);
+}
+
+.adminTable td {
+    padding: 12px;
+    vertical-align: top;
+    border: 1px solid var(--backgroundColor);
+}
+
+.adminTable tbody tr:nth-child(odd) {
+    background-color: var(--headerPaleColor);
+}
+
+.adminTable tbody tr:nth-child(even) {
+    background-color: white;
+}
+
+.adminTable tbody tr:hover {
+    background-color: var(--quoteColor);
+}
+
+.adminTable thead tr:first-child th:first-child {
+    border-top-left-radius: 8px;
+}
+
+.adminTable thead tr:first-child th:last-child {
+    border-top-right-radius: 8px;
+}
+
+.adminTable tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 8px;
+}
+
+.adminTable tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
+}
+
+.adminTableTitleColumn {
+    width: 220px;
+}
+
+.adminTableDateColumn {
+    width: 150px;
+    white-space: nowrap;
+}
+
+.adminTableSmallColumn {
+    width: 120px;
+    text-align: center;
+}
+
+.adminTablePseudoColumn {
+    width: 140px;
+}
+
+.adminTableActionColumn {
+    width: 120px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.adminTableLink {
+    color: var(--dateColor);
+}
+
+.adminTableLink:hover {
+    color: var(--titleColor);
+}
+
+.commentsMonitoringTable td:nth-child(4) {
+    max-width: 360px;
+    line-height: 1.4;
+}
+
+/**
+ * Cartes de monitoring
+ */
+.monitoringCards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 45px;
+}
+
+.monitoringCard {
+    min-height: 130px;
+    margin-bottom: 0;
+    padding: 20px;
+    text-align: left;
+    color: white;
+    background-color: var(--commentPaleColor);
+    border-left: 8px solid var(--commentColor);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.monitoringCard:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.24);
+}
+
+.monitoringCardValue {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.monitoringCardLabel {
+    display: block;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+/**
+ * Ajustement de la largeur du contenu admin.
+ * La consigne demande un affichage correct entre 1366px et 1920px.
+ */
+main:has(.adminPage) {
+    width: 90%;
+    max-width: 1500px;
 }
 
 /** 
  * Footer global de la page.
  */
+
 footer {
     position: fixed;
     bottom: 0;
     display: flex;
     justify-content: center;
-    width: 100%;;
+    width: 100%;
     padding: 20px;
     color: white;
     background-color: var(--headerColor);
